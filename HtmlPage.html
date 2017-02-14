@@ -1,0 +1,55 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Nikon</title>
+	<meta charset="utf-8" />
+    <link rel="stylesheet" href="StyleSheet.css" />
+    <script src="jquery.js"></script>
+    <script src="JavaScript.js"></script>
+</head>
+<body>
+    <div id="wraper" class="clearfix">
+        <div id="header" class="clearfix background">
+            <div id="logo" ></div><!--Логотип-->
+            <div id="hello"></div><!--Скрытый блок приветствия пользователя-->
+            <div id="reg">
+                <p>Вход/регистрация</p>
+                <input id="login" type="text" placeholder="Login" />
+                <input id="password" type="password" placeholder="Password" />
+                <p id="false_enter"> </p>
+                <button id="btn_reg">Register</button>
+                <button id="btn_log">Log In</button>
+            </div><!--Форма регистрации-->
+        </div><!-- Блок хедера-->
+        <div id="navy" class="background">
+            <ul>
+                <li>Product_1</li>
+                <li>Product_2</li>
+                <li>Product_3</li>
+                <li>Product_4</li>
+            </ul>
+        </div> <!--Блок навигации-->
+        <div id="content" class="background">
+            <div id="image">
+                <p id="title"></p>
+                <img src="" />
+                <p id="text"></p>
+            </div>
+        </div><!--Блок информации о продукте-->
+        <div id="coment" class="background">
+            <textarea id="text_review" cols="35" rows="5" placeholder="Введите коментарий"></textarea><!--Отзыв-->
+            <br />
+            <textarea id="rate_review" cols="35" rows="1" placeholder="Введите оценку 0-5"></textarea><!--Оценка-->
+            <br />
+            <button id="send">Send review</button>
+            <p id="error">
+                Оставлять коментарии могут только
+                зарегестрированые пользователи
+            </p><!--Скрытый текст-->
+            <p>Reviews</p>
+            <p id="review" class="review">
+            </p>
+        </div><!--Коментарии о продукте-->
+    </div>
+</body>
+</html>
