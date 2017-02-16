@@ -43,12 +43,22 @@
             function mark() {
                 $("#login, #password").css("border-color", "#808080");
             }
-    }//не введен логин/пароль
+        },//не введен логин/пароль
+
+        noComent: function () {
+            $("#text_review, #rate_review").css("border-color", "red");
+            setTimeout(mark, 1000);
+            function mark() {
+                $("#text_review, #rate_review").css("border-color", "#808080");
+            }
+        }
     };//блок view
 
     var model = {
         index: undefined,
         token: undefined,
+        rv_login: /^[a-zA-Zа-яА-Я]+$/,
+        rv_rate:/^[0-5]+$/,
         content: function (index) {
             this.index = index + 1;
             $.ajax({
@@ -75,7 +85,7 @@
                 username: login,
                 password: password
             };
-            if (login != '' || password != '') {//проверка на ввод логин/пароля
+            if (login != '' && password != '' && login.length > 2 && model.rv_login.test(login)) {//проверка на ввод логин/пароля
                 $.ajax({
                     url: "http://smktesting.herokuapp.com/api/register/",
                     type: 'POST',
@@ -104,7 +114,7 @@
                 username: login,
                 password: password
             };
-            if (login != '' || password != '') {//проверка на ввод логин/пароля
+            if (login != '' && password != '' && login.length > 2 && model.rv_login.test(login)) {//проверка на ввод логин/пароля
                 $.ajax({
                     url: "http://smktesting.herokuapp.com/api/login/",
                     type: 'POST',
@@ -133,33 +143,36 @@
                 rate: rate,
                 text: text
             };
-            if (rate != "" || text != "") {
-                $.ajax({
-                    url: "http://smktesting.herokuapp.com/api/reviews/" + this.index,//запрос на пост коментария
-                    type: 'POST',
-                    headers: {
-                        'Authorization': 'Token ' + this.token
-                    },
-                    dataType: 'json',
-                    data: review,
-                    success: function () {
-                        $.ajax({
-                            url: 'http://smktesting.herokuapp.com/api/reviews/' + model.index,//обновить список коментариев
-                            type: 'GET',
-                            success: function (data) {
-                                view.showComents(data, model.index);
-                            }
-                        });
-                    }
-                });
+            if (model.token != undefined) {
+                if (rate != "" && text != "" && rate.length == 1 && model.rv_rate.test(rate)) {
+                    $.ajax({
+                        url: "http://smktesting.herokuapp.com/api/reviews/" + this.index,//запрос на пост коментария
+                        type: 'POST',
+                        headers: {
+                            'Authorization': 'Token ' + this.token
+                        },
+                        dataType: 'json',
+                        data: review,
+                        success: function () {
+                            $.ajax({
+                                url: 'http://smktesting.herokuapp.com/api/reviews/' + model.index,//обновить список коментариев
+                                type: 'GET',
+                                success: function (data) {
+                                    view.showComents(data, model.index);
+                                }
+                            });
+                        }
+                    });
+                }
+                else {
+                    view.noComent();
+                }
             }
-        },//запрос на пост коментария
-        callError:function(){
-            if (model.token == undefined) {//проверка регистрации/входа пользователя
+            else {
                 view.error();
                 setTimeout(view.hide, 2000);
             }
-        }//коментарии могут постить только зарегестрированые пользователи
+        },//запрос на пост коментария
     };//блок model
 
     var controller = {
@@ -182,7 +195,6 @@
         clk_send: function () {
             $("#send").on("click", function () {
                 model.addComent();
-                model.callError();
             })
         }//событие при посте отзыва
     };//блок controller
@@ -192,5 +204,6 @@
         controller.clk_register();
         controller.clk_log_in();
         controller.clk_send();
+        model.content(0);
     })();//анонимная функция для автоматического запуска функций-обработчиков
 }
