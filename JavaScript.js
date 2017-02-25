@@ -57,8 +57,10 @@
     var model = {
         index: undefined,
         token: undefined,
-        rv_login: /^[a-zA-Zа-яА-Я]+$/,
-        rv_rate:/^[0-5]+$/,
+        rv_login: /^[a-zA-Zа-яА-Я]{1,}[a-zA-Zа-яА-Я0-9]{2,}/,
+        rv_rate: /^[0-5]/,
+        rv_password: /\w{8,16}/,
+        rv_text: /\w{10,}/,
         content: function (index) {
             this.index = index + 1;
             $.ajax({
@@ -73,7 +75,7 @@
                         type: 'GET',
                         success: function (data) {
                             view.showComents(data, index);
-                        } 
+                        }
                     })//ajax запрос возвращает коментарии продукта
                 }
             });//ajax запрос возвращает информацию о продукте
@@ -85,7 +87,7 @@
                 username: login,
                 password: password
             };
-            if (login != '' && password != '' && login.length > 2 && model.rv_login.test(login)) {//проверка на ввод логин/пароля
+            if (model.rv_password.test(password) && model.rv_login.test(login)) {//проверка на ввод логин/пароля
                 $.ajax({
                     url: "http://smktesting.herokuapp.com/api/register/",
                     type: 'POST',
@@ -114,7 +116,7 @@
                 username: login,
                 password: password
             };
-            if (login != '' && password != '' && login.length > 2 && model.rv_login.test(login)) {//проверка на ввод логин/пароля
+            if (model.rv_password.test(password) && model.rv_login.test(login)) {//проверка на ввод логин/пароля
                 $.ajax({
                     url: "http://smktesting.herokuapp.com/api/login/",
                     type: 'POST',
@@ -144,7 +146,7 @@
                 text: text
             };
             if (model.token != undefined) {
-                if (rate != "" && text != "" && rate.length == 1 && model.rv_rate.test(rate)) {
+                if (model.rv_text.test(text) && model.rv_rate.test(rate)) {
                     $.ajax({
                         url: "http://smktesting.herokuapp.com/api/reviews/" + this.index,//запрос на пост коментария
                         type: 'POST',
